@@ -13,7 +13,7 @@ namespace KDE
         friend class KDRenderer;
 
         private:
-            void* m_Data;
+            mutable struct KDWindowData* m_Data;
 
         public:
             KDWindow(int width, int height, const char* title);
@@ -22,7 +22,7 @@ namespace KDE
             ~KDWindow();
 
             void SetEventFunc(std::function<void(class KDEvent&)> eventFunc);
-            inline void* GetNativeData() const { return m_Data; }
+            inline KDWindowData* GetNativeData() const { return m_Data; }
 
             void Update();
             bool ShouldClose();

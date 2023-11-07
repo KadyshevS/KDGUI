@@ -12,24 +12,27 @@
 #include <Events/MouseEvent.h>
 #include <Events/KeyEvent.h>
 
-struct KDWindowData_win32
+namespace KDE
 {
-    bool IsShouldClose = false;
-    bool IsCursorEnabled = true;
-    int Width = 0, Height = 0;
-    std::string Title;
-    std::function<void(KDE::KDEvent&)> EventFunc = nullptr;
-    std::vector<BYTE> RawBuffer;
+    struct KDWindowData
+    {
+        bool IsShouldClose = false;
+        bool IsCursorEnabled = true;
+        int Width = 0, Height = 0;
+        std::string Title;
+        std::function<void(KDE::KDEvent&)> EventFunc = nullptr;
+        std::vector<BYTE> RawBuffer;
 
-    HINSTANCE hInstance = NULL;
-    HWND hWnd = NULL;
-    MSG msg = {};
-};
+        HINSTANCE hInstance = NULL;
+        HWND hWnd = NULL;
+        MSG msg = {};
+    };
+}
 
 LRESULT HandleMsg(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     KDE::KDWindow* const pWnd = (KDE::KDWindow*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-    KDWindowData_win32* const pWndData = (KDWindowData_win32*)pWnd->GetNativeData();
+    KDE::KDWindowData* const pWndData = (KDE::KDWindowData*)pWnd->GetNativeData();
     static bool isCursorInWindow = false;  
 
     KDE::MouseScrolledEvent eDeltaRefresh(0, 0);
@@ -229,13 +232,12 @@ namespace KDE
 {
     KDWindow::KDWindow(int width, int height, const char *title)
     {
-        m_Data = new KDWindowData_win32{};
-        KDWindowData_win32* riData = (KDWindowData_win32*)m_Data;
+        m_Data = new KDWindowData{};
         
-        riData->Width = width;
-        riData->Height = height;
-        riData->Title = title;
-        riData->hInstance = GetModuleHandle(NULL);
+        m_Data->Width = width;
+        m_Data->Height = height;
+        m_Data->Title = title;
+        m_Data->hInstance = GetModuleHandle(NULL);
 
         WNDCLASSEX wc{};
         wc.cbSize = sizeof(WNDCLASSEX);
@@ -243,7 +245,7 @@ namespace KDE
         wc.lpfnWndProc = HandleMsgSetup;
         wc.cbClsExtra = 0;
         wc.cbWndExtra = 0;
-        wc.hInstance = riData->hInstance;
+        wc.hInstance = m_Data->hInstance;
         wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
         wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
         wc.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -252,24 +254,24 @@ namespace KDE
         wc.lpszClassName = "KDWindowTestClass1";
         RegisterClassEx(&wc);
 
-        riData->hWnd = CreateWindowEx(
-            WS_EX_OVERLAPPEDWINDOW, "KDWindowTestClass1", riData->Title.c_str(),
+        m_Data->hWnd = CreateWindowEx(
+            WS_EX_OVERLAPPEDWINDOW, "KDWindowTestClass1", m_Data->Title.c_str(),
             WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_SYSMENU, 20, 20, 
-            width, height, NULL, NULL, riData->hInstance, this
+            width, height, NULL, NULL, m_Data->hInstance, this
         );
 
-        if(riData->hWnd == NULL)
+        if(m_Data->hWnd == NULL)
             throw KDWND_LAST_EXCEPT;
 
         RECT clientRect = { 0, 0, width, height };
         AdjustWindowRect(&clientRect, 
             WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
 
-        SetWindowPos(riData->hWnd, NULL, 20, 20,
+        SetWindowPos(m_Data->hWnd, NULL, 20, 20,
             clientRect.right - clientRect.left + 4, 
             clientRect.bottom - clientRect.top + 4, 0);
 
-        ShowWindow(riData->hWnd, SW_SHOW);
+        ShowWindow(m_Data->hWnd, SW_SHOW);
 
         RAWINPUTDEVICE rid{};
         rid.usUsagePage = 0x01;
@@ -281,65 +283,63 @@ namespace KDE
     }
     KDWindow::~KDWindow()
     {
-        UnregisterClass("KDWindowTestClass1", ((KDWindowData_win32*)m_Data)->hInstance);
-        DestroyWindow(((KDWindowData_win32*)m_Data)->hWnd);
-        delete (KDWindowData_win32*)m_Data;
+        UnregisterClass("KDWindowTestClass1", m_Data->hInstance);
+        DestroyWindow(m_Data->hWnd);
+        delete m_Data;
     }
 
     void KDWindow::SetEventFunc(std::function<void(KDEvent&)> eventFunc)
     {
-        ( (KDWindowData_win32*)m_Data )->EventFunc = eventFunc;
+        m_Data->EventFunc = eventFunc;
     }
     void KDWindow::Update()
     {
-        KDWindowData_win32* riData = (KDWindowData_win32*)m_Data;
-
         KDE::AppUpdateEvent eUpd;
-        riData->EventFunc(eUpd);
+        m_Data->EventFunc(eUpd);
 
-        while(PeekMessage(&riData->msg, NULL, 0, 0, PM_REMOVE))
+        while(PeekMessage(&m_Data->msg, NULL, 0, 0, PM_REMOVE))
         {
-            if(riData->msg.message == WM_QUIT)
+            if(m_Data->msg.message == WM_QUIT)
             {
-                riData->IsShouldClose = true;
+                m_Data->IsShouldClose = true;
                 break;
             }
 
-            TranslateMessage(&riData->msg);
-            DispatchMessage(&riData->msg);
+            TranslateMessage(&m_Data->msg);
+            DispatchMessage(&m_Data->msg);
         }
     }
     bool KDWindow::ShouldClose()
     {
-        return ( (KDWindowData_win32*)m_Data )->IsShouldClose;
+        return m_Data->IsShouldClose;
     }
 
     void KDWindow::ShowCursor()
     {
-        ( (KDWindowData_win32*)m_Data )->IsCursorEnabled = true;
+        m_Data->IsCursorEnabled = true;
         while (::ShowCursor(TRUE), 0);
     }
     void KDWindow::HideCursor()
     {
-        ( (KDWindowData_win32*)m_Data )->IsCursorEnabled = false;
+        m_Data->IsCursorEnabled = false;
         SetCursorPos(
-            ( (KDWindowData_win32*)m_Data )->Width / 2,
-            ( (KDWindowData_win32*)m_Data )->Height / 2
+            m_Data->Width / 2,
+            m_Data->Height / 2
         );
         while (::ShowCursor(FALSE) >= 0);
     }
     bool KDWindow::IsCursorEnabled() const
     {
-        return ( (KDWindowData_win32*)m_Data )->IsCursorEnabled;
+        return m_Data->IsCursorEnabled;
     }
 
     int KDWindow::GetWidth() const
     {
-        return ( (KDWindowData_win32*)m_Data )->Width;
+        return m_Data->Width;
     }
     int KDWindow::GetHeight() const
     {
-        return ( (KDWindowData_win32*)m_Data )->Height;
+        return m_Data->Height;
     }
 
     void KDWindow::ShowMessageBox(const char* text, const char* caption)

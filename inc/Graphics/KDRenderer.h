@@ -12,7 +12,7 @@ namespace KDE
         friend class KDApplication;
 
         private:
-            void* m_Data;
+            struct KDRendererData* m_Data;
 
         private:
             class DXGIInfoManager& GetInfoManager() const;
@@ -35,10 +35,6 @@ namespace KDE
             KDRenderer(const KDRenderer&) = delete;
             KDRenderer& operator = (const KDRenderer&) = delete;
             ~KDRenderer();
-
-            void DrawTestScene();
-            void DrawTestTexturedScene();
-            void DrawTestPlane();
 
             float GetDeltaTime() const;
     };
