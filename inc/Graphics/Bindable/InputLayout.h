@@ -42,7 +42,7 @@ namespace KDE
 			InputLayout(
 				KDRenderer& renderer, 
 				const std::vector<LayoutElement>& layout, 
-				const Microsoft::WRL::ComPtr<ID3DBlob>& vertexShaderBytecode)
+				ID3DBlob* vertexShaderBytecode)
 			{
 				INFOMAN(renderer);
 

@@ -41,9 +41,9 @@ namespace KDE
 				GetContext(renderer).VSSetShader(pVShader.Get(), nullptr, 0);
 			}
 
-			Microsoft::WRL::ComPtr<ID3DBlob>& GetBytecode() const
+			ID3DBlob* GetBytecode() const
 			{
-				return pBlob;
+				return pBlob.Get();
 			}
 
 		private:

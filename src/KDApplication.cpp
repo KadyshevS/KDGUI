@@ -1,8 +1,6 @@
 #include <precomp.h>
 
 #include <WinBase/KDApplication.h>
-#include <WinBase/KDWindow.h>
-#include <Graphics/KDRenderer.h>
 
 #include <Events/KDEvent.h>
 #include <Events/ApplicationEvent.h>
@@ -15,10 +13,10 @@ namespace KDE
 {
     void KDApplication::Run()
     {
-        window = new KDWindow(800, 600, "Test app");
+        window = std::make_shared<KDWindow>(800, 600, "Test app");
         window->SetEventFunc(std::bind(&KDApplication::OnEvent, this, std::placeholders::_1));
 
-        renderer = new KDRenderer(window);
+        renderer = std::make_shared<KDRenderer>(window);
 
         OnCreate();
         while(!window->ShouldClose())

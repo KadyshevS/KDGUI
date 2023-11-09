@@ -26,7 +26,7 @@ namespace KDE
 {
     struct KDRendererData
     {
-        KDE::KDWindow* pOutputWindow = nullptr;
+        std::shared_ptr<KDE::KDWindow> pOutputWindow;
         KDE::DXGIInfoManager m_InfoManager;
 
         wrl::ComPtr<ID3D11Device>               pDevice;
@@ -34,8 +34,6 @@ namespace KDE
         wrl::ComPtr<IDXGISwapChain>             pSwapChain;
         wrl::ComPtr<ID3D11RenderTargetView>     pTarget;
         wrl::ComPtr<ID3D11DepthStencilView>     pDSView;
-
-        KDE::Texture* pDefaultTexture;
 
         KDE::Timer pTimer;
         float m_DeltaTime = 0.0f;
@@ -61,11 +59,10 @@ namespace KDE
 
 namespace KDE
 {
-    KDRenderer::KDRenderer(KDWindow* outputWindow)
+    KDRenderer::KDRenderer(std::shared_ptr<KDWindow> outputWindow)
+        : m_Data(new KDRendererData{})
     {
         HRESULT hr;
-
-        m_Data = new KDRendererData{};
 
         KDWindowData* riWinData = (KDWindowData*)outputWindow->m_Data;
 
@@ -155,13 +152,15 @@ namespace KDE
         vp.TopLeftY = 0.0f;
         m_Data->pContext->RSSetViewports(1, &vp);
 
-        m_Data->pDefaultTexture = new Texture(*this, "assets/images/cube.jpg");
-
         UpdateCamera();
     }
     KDRenderer::~KDRenderer()
     {
-        delete (KDRendererData*)m_Data;
+        if (m_Data) 
+        {
+            delete m_Data;
+            m_Data = nullptr;
+        }
     }
 
     DXGIInfoManager& KDRenderer::GetInfoManager() const

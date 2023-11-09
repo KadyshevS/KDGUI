@@ -1,4 +1,4 @@
-#include "precomp.h"
+#include <precomp.h>
 
 #include <Graphics/Bindable/Bindable.h>
 #include <Debug/DXGIInfoManager.h>

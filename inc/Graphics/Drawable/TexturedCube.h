@@ -13,7 +13,6 @@ namespace KDE
                 std::uniform_real_distribution<float>& bdist,
                 std::uniform_real_distribution<float>& cdist,
                 std::uniform_real_distribution<float>& ddist);
-            ~TexturedCube();
 
             void Update(KDRenderer& renderer, float deltaTime) override;
             DirectX::XMMATRIX GetModelMatrix() const override;

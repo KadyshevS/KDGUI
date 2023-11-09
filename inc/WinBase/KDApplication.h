@@ -1,12 +1,17 @@
 #pragma once
 
+#include <WinBase/KDWindow.h>
+#include <Graphics/KDRenderer.h>
+
+#include <memory>
+
 namespace KDE
 {
     class KDApplication
     {
         protected:
-            class KDWindow* window;
-            class KDRenderer* renderer;
+            std::shared_ptr<KDWindow> window;
+            std::shared_ptr<KDRenderer> renderer;
 
         protected:
             void OnEvent(class KDEvent& e);

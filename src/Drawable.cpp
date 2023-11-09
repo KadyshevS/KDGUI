@@ -4,12 +4,15 @@
 
 namespace KDE
 {
-    void Drawable::AddBind(Bindable* bind)
+    void Drawable::AddBind(std::unique_ptr<Bindable> bind)
     {
-        if(typeid(*bind) == typeid(IndexBuffer))
-            m_IndexBuffer = (IndexBuffer*)bind;
+        if(typeid(*bind.get()) == typeid(IndexBuffer))
+        {
+            assert( "Index Buffer is already bound" && m_IndexBuffer == nullptr );
+            m_IndexBuffer = (IndexBuffer*)bind.get();
+        }
 
-        m_Binds.push_back(bind);
+        m_Binds.push_back( std::move(bind) );
     }
 
     void Drawable::Draw(KDRenderer& renderer)
@@ -19,5 +22,10 @@ namespace KDE
             b->Bind(renderer);
         }
         renderer.DrawIndexed(m_IndexBuffer->GetCount());
+    }
+
+    Drawable::~Drawable()
+    {
+        m_Binds.clear();
     }
 }

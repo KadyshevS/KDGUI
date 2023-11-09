@@ -12,8 +12,8 @@ class SandboxApp : public KDE::KDApplication
             std::uniform_real_distribution<float> cdist(0.0f, 3.14f * 0.3f);
             std::uniform_real_distribution<float> ddist(6.0f, 20.0f);
 
-            for(int i = 0; i < 60; i++)
-                texCubes.emplace_back(new KDE::TexturedCube(*renderer, rng, adist, bdist, cdist, ddist));
+            for(int i = 0; i < 1; i++)
+                texCubes.emplace_back(std::make_unique<KDE::TexturedCube>(*renderer, rng, adist, bdist, cdist, ddist));
         }
         void OnUpdate() override
         {
@@ -25,9 +25,10 @@ class SandboxApp : public KDE::KDApplication
         }
         void OnDestroy() override
         {
+            texCubes.clear();
         }
     private:
-        std::vector<KDE::TexturedCube*> texCubes;
+        std::vector<std::unique_ptr<KDE::TexturedCube>> texCubes;
 };
 
 int main(int argc, char* argv[])

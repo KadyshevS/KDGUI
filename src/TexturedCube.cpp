@@ -72,31 +72,32 @@ namespace KDE
             20, 21, 22,   20, 22, 23,
         };
 
-        AddBind(new VertexConstantBuffer<CBuffer>(renderer));
+        AddBind(std::make_unique<VertexConstantBuffer<CBuffer>>(renderer));
 
-        AddBind(new VertexBuffer<Vertex>(renderer, vertices));
+        AddBind(std::make_unique<VertexBuffer<Vertex>>(renderer, vertices));
 
-        AddBind(new IndexBuffer(renderer, indices));
+        AddBind(std::make_unique<IndexBuffer>(renderer, indices));
         
-        VertexShader* vShader = new VertexShader(renderer, "assets/shaders/VSTexture.cso");
-        AddBind(vShader);
+        auto vShader = std::make_unique<VertexShader>(renderer, "assets/shaders/VSTexture.cso");
+        auto vShaderBlob = vShader->GetBytecode();
+        AddBind(std::move(vShader));
 
-        AddBind(new PixelShader(renderer, "assets/shaders/PSTexture.cso"));
+        AddBind(std::make_unique<PixelShader>(renderer, "assets/shaders/PSTexture.cso"));
 
-        AddBind(new InputLayout(renderer,
+        AddBind(std::make_unique<InputLayout>(renderer,
             std::vector<LayoutElement>
             {
                 { "Position", InputType_Float3 },
                 { "TexCoord", InputType_Float2 }
             },
-            vShader->GetBytecode())
+            vShaderBlob)
         );
 
-        AddBind(new Topology(renderer, TopologyType_TriangleList));
+        AddBind(std::make_unique<Topology>(renderer, TopologyType_TriangleList));
 
-        AddBind(new Sampler(renderer));
+        AddBind(std::make_unique<Sampler>(renderer));
 
-        AddBind(new Texture(renderer, "assets/images/cube.jpg"));
+        AddBind(std::make_unique<Texture>(renderer, "assets/images/cube.jpg"));
     }
 
     void TexturedCube::Update(KDRenderer& renderer, float deltaTime)
@@ -108,7 +109,7 @@ namespace KDE
         gPitch += gPitchD * deltaTime;
         gYaw += gYawD * deltaTime;
 
-        ( (VertexConstantBuffer<CBuffer>*)m_Binds[0] )->Update(renderer, 
+        ( (VertexConstantBuffer<CBuffer>*)m_Binds[0].get() )->Update(renderer, 
         {
             GetModelMatrix()
         });
@@ -121,10 +122,5 @@ namespace KDE
             dx::XMMatrixTranslation(r, 0.0f, 0.0f) *
             dx::XMMatrixRotationRollPitchYaw(gRoll, gPitch, gYaw) *
             dx::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
-    }
-
-    TexturedCube::~TexturedCube()
-    {
-        m_Binds.clear();
     }
 }

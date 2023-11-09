@@ -6,6 +6,7 @@
 
 #include <DirectXMath.h>
 #include <vector>
+#include <memory>
 
 namespace KDE
 {
@@ -15,9 +16,9 @@ namespace KDE
             Drawable() = default;
 			Drawable(const Drawable&) = delete;
 			Drawable& operator = (const Drawable&) = delete;
-            virtual ~Drawable() = default;
+            ~Drawable();
 
-            void AddBind(class Bindable* bind);
+            void AddBind(std::unique_ptr<Bindable> bind);
 
             void Draw(KDRenderer& renderer);
             virtual void Update(KDRenderer& renderer, float deltaTime) = 0;
@@ -25,7 +26,7 @@ namespace KDE
             virtual DirectX::XMMATRIX GetModelMatrix() const = 0;
 
         protected:
-            std::vector<Bindable*> m_Binds;
-            class IndexBuffer* m_IndexBuffer;
+            std::vector<std::unique_ptr<Bindable>> m_Binds;
+            const IndexBuffer* m_IndexBuffer = nullptr;
     };
 }

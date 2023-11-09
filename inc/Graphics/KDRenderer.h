@@ -1,5 +1,9 @@
 #pragma once 
 
+#include <WinBase/KDWindow.h>
+
+#include <memory>
+
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
@@ -10,6 +14,14 @@ namespace KDE
         friend class Bindable;
         friend class Drawable;
         friend class KDApplication;
+
+        public:
+            KDRenderer(std::shared_ptr<KDWindow> outputWindow);
+            KDRenderer(const KDRenderer&) = delete;
+            KDRenderer& operator = (const KDRenderer&) = delete;
+            ~KDRenderer();
+
+            float GetDeltaTime() const;
 
         private:
             struct KDRendererData* m_Data;
@@ -29,13 +41,5 @@ namespace KDE
             void EndFrame();
             void UpdateCamera();
             void DrawIndexed(unsigned int count);
-
-        public:
-            KDRenderer(class KDWindow* outputWindow);
-            KDRenderer(const KDRenderer&) = delete;
-            KDRenderer& operator = (const KDRenderer&) = delete;
-            ~KDRenderer();
-
-            float GetDeltaTime() const;
     };
 }
