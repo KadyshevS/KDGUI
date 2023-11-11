@@ -4,7 +4,7 @@
 
 namespace KDE
 {
-	enum class KDEventType
+	enum class EventType
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
@@ -13,7 +13,7 @@ namespace KDE
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseRaw, MouseScrolled, MouseEnter, MouseLeave
 	};
 
-	enum KDEventCategory
+	enum EventCategory
 	{
 		None 						= 0,
 		EventCategoryApplication 	= 1 << 0,
@@ -23,26 +23,26 @@ namespace KDE
 		EventCategoryMouseButton 	= 1 << 4,
 	};
 
-#define EVENT_CLASS_TYPE(type)	static KDEventType GetStaticType() { return KDEventType::type; }\
-								virtual KDEventType GetEventType() const override { return GetStaticType(); }\
+#define EVENT_CLASS_TYPE(type)	static EventType GetStaticType() { return EventType::type; }\
+								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category)	virtual int GetCategoryFlags() const override { return category; }
 
-	class KDEvent
+	class Event
 	{
 		friend class EventDispatcher;
 	public:
-		virtual ~KDEvent() = default;
+		virtual ~Event() = default;
 
 		bool Handled = false;
 
-		virtual KDEventType GetEventType() const = 0;
+		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
-		inline bool IsInCategory(KDEventCategory category)
+		inline bool IsInCategory(EventCategory category)
 		{
 			return GetCategoryFlags() & category;
 		}
@@ -51,7 +51,7 @@ namespace KDE
 	class EventDispatcher
 	{
 	public:
-		EventDispatcher(KDEvent& event)
+		EventDispatcher(Event& event)
 			: m_Event(event) {}
 
 		template<typename T, typename F>
@@ -65,11 +65,11 @@ namespace KDE
 			return false;
 		}
 	private:
-		KDEvent& m_Event;
+		Event& m_Event;
 	};
 }
 
-inline std::ostream& operator<<(std::ostream& os, const KDE::KDEvent& e)
+inline std::ostream& operator<<(std::ostream& os, const KDE::Event& e)
 {
 	return os << e.ToString();
 }

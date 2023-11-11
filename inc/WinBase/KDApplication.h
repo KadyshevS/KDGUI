@@ -14,7 +14,7 @@ namespace KDE
             std::shared_ptr<KDRenderer> renderer;
 
         protected:
-            void OnEvent(class KDEvent& e);
+            void OnEvent(class Event& e);
 
         public:
             void Run();

@@ -12,7 +12,7 @@ namespace KDE
     {
     }
 
-    const char* KDException::what() const
+    const char* KDException::what() const noexcept
     {
         std::stringstream ss;
         ss  << type() << "\n\n"

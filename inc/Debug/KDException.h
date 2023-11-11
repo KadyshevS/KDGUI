@@ -11,7 +11,7 @@ namespace KDE
             KDException(int line, const std::string& file);
             ~KDException();
 
-            virtual const char* what() const override;
+            virtual const char* what() const noexcept override;
             virtual const char* type() const;
 
         protected:

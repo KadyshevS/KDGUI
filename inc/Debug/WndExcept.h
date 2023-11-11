@@ -42,7 +42,7 @@ class WndHrException : public WndException
         {
             return "KDWindow Exception";
         }
-        virtual const char* what() const override
+        virtual const char* what() const noexcept override
         {
             std::stringstream ss;
             ss  << type() << "\n\n"

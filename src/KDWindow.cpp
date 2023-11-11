@@ -7,7 +7,7 @@
 
 #include <Input/Input.h>
 
-#include <Events/KDEvent.h>
+#include <Events/Event.h>
 #include <Events/ApplicationEvent.h>
 #include <Events/MouseEvent.h>
 #include <Events/KeyEvent.h>
@@ -20,7 +20,7 @@ namespace KDE
         bool IsCursorEnabled = true;
         int Width = 0, Height = 0;
         std::string Title;
-        std::function<void(KDE::KDEvent&)> EventFunc = nullptr;
+        std::function<void(KDE::Event&)> EventFunc = nullptr;
         std::vector<BYTE> RawBuffer;
 
         HINSTANCE hInstance = NULL;
@@ -288,7 +288,7 @@ namespace KDE
         delete m_Data;
     }
 
-    void KDWindow::SetEventFunc(std::function<void(KDEvent&)> eventFunc)
+    void KDWindow::SetEventFunc(std::function<void(Event&)> eventFunc)
     {
         m_Data->EventFunc = eventFunc;
     }

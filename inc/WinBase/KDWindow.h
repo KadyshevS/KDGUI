@@ -21,7 +21,7 @@ namespace KDE
             KDWindow& operator = (const KDWindow&) = delete;
             ~KDWindow();
 
-            void SetEventFunc(std::function<void(class KDEvent&)> eventFunc);
+            void SetEventFunc(std::function<void(class Event&)> eventFunc);
             inline KDWindowData* GetNativeData() const { return m_Data; }
 
             void Update();

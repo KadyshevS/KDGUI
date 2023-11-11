@@ -9,7 +9,7 @@
 #include <Debug/DXGIInfoManager.h>
 #include <Debug/GfxExcept.h>
 
-#include <Events/KDEvent.h>
+#include <Events/Event.h>
 
 float WrapAngle(float x)
 {
@@ -48,7 +48,7 @@ namespace KDE
         bool IsCursorEnabled;
         int Width, Height;
         std::string Title;
-        std::function<void(KDE::KDEvent&)> EventFunc;
+        std::function<void(KDE::Event&)> EventFunc;
         std::vector<BYTE> RawBuffer;
 
         HINSTANCE hInstance;
@@ -165,15 +165,15 @@ namespace KDE
 
     DXGIInfoManager& KDRenderer::GetInfoManager() const
     {
-        return ( (KDRendererData*)m_Data )->m_InfoManager;
+        return m_Data->m_InfoManager;
     }
     ID3D11Device& KDRenderer::GetDevice() const
     {
-        return *( (KDRendererData*)m_Data )->pDevice.Get();
+        return *( m_Data->pDevice.Get() );
     }
     ID3D11DeviceContext& KDRenderer::GetContext() const
     {
-        return *( (KDRendererData*)m_Data )->pContext.Get();
+        return *( m_Data->pContext.Get() );
     }
     
     void KDRenderer::MoveCameraTo(float offX, float offY, float offZ)

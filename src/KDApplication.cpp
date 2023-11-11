@@ -2,7 +2,7 @@
 
 #include <WinBase/KDApplication.h>
 
-#include <Events/KDEvent.h>
+#include <Events/Event.h>
 #include <Events/ApplicationEvent.h>
 #include <Events/MouseEvent.h>
 #include <Events/KeyEvent.h>
@@ -29,53 +29,53 @@ namespace KDE
         }
         OnDestroy();
     }
-    void KDApplication::OnEvent(KDEvent& e)
+    void KDApplication::OnEvent(Event& e)
     {
         switch(e.GetEventType())
         {
-            case KDEventType::KeyPressed:
+            case EventType::KeyPressed:
                 {
                     Input::OnKeyPressed( ((KeyPressedEvent&)e).GetKeyCode() );
                     break;
                 }
-            case KDEventType::KeyReleased:
+            case EventType::KeyReleased:
                 {
                     Input::OnKeyReleased( ((KeyReleasedEvent&)e).GetKeyCode() );
                     break;
                 }
-            case KDEventType::KeyChar:
+            case EventType::KeyChar:
                 {
                     // TODO
                     break;
                 }
-            case KDEventType::MouseButtonPressed:
+            case EventType::MouseButtonPressed:
                 {
                     Input::OnMouseButtonPressed( ((MouseButtonPressedEvent&)e).GetMouseButton() );
                     break;
                 }
-            case KDEventType::MouseButtonReleased:
+            case EventType::MouseButtonReleased:
                 {
                     Input::OnMouseButtonReleased( ((MouseButtonReleasedEvent&)e).GetMouseButton() );
                     break;
                 }
-            case KDEventType::MouseScrolled:
+            case EventType::MouseScrolled:
                 {
                     Input::OnMouseWheelScroll( ((MouseScrolledEvent&)e).GetDeltaY() );
                     break;
                 }
-            case KDEventType::MouseMoved:
+            case EventType::MouseMoved:
                 {
                     auto& riE = (MouseMovedEvent&)e;
                     Input::OnMouseMoved( (int)riE.GetX(), (int)riE.GetY() );
                     break;
                 }
-            case KDEventType::MouseRaw:
+            case EventType::MouseRaw:
                 {
                     auto& riE = (MouseRawEvent&)e;
                     Input::OnMouseRaw( (int)riE.GetDeltaX(), (int)riE.GetDeltaY() );
                     break;
                 }
-            case KDEventType::AppUpdate:
+            case EventType::AppUpdate:
                 {
                     Input::OnMouseRaw(0, 0);
                     Input::OnMouseWheelScroll( 0 );

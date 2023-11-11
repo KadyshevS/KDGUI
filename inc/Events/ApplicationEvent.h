@@ -1,12 +1,12 @@
 #pragma once
 
-#include "KDEvent.h"
+#include "Event.h"
 
 #include <sstream>
 
 namespace KDE
 {
-	class WindowResizeEvent : public KDEvent
+	class WindowResizeEvent : public Event
 	{
 	private:
 		unsigned int m_Width, m_Height;
@@ -31,7 +31,7 @@ namespace KDE
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class WindowMovedEvent : public KDEvent
+	class WindowMovedEvent : public Event
 	{
 	private:
 		short PosX, PosY;
@@ -56,7 +56,7 @@ namespace KDE
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class WindowCloseEvent : public KDEvent
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() {}
@@ -65,7 +65,7 @@ namespace KDE
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 	
-	class WindowFocusEvent : public KDEvent
+	class WindowFocusEvent : public Event
 	{
 	public:
 		WindowFocusEvent() {}
@@ -74,7 +74,7 @@ namespace KDE
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class WindowLostFocusEvent : public KDEvent
+	class WindowLostFocusEvent : public Event
 	{
 	public:
 		WindowLostFocusEvent() {}
@@ -83,7 +83,7 @@ namespace KDE
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppTickEvent : public KDEvent
+	class AppTickEvent : public Event
 	{
 	public:
 		AppTickEvent() {}
@@ -91,7 +91,7 @@ namespace KDE
 		EVENT_CLASS_TYPE(AppTick)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
-	class AppUpdateEvent : public KDEvent
+	class AppUpdateEvent : public Event
 	{
 	public:
 		AppUpdateEvent() {}
@@ -99,7 +99,7 @@ namespace KDE
 		EVENT_CLASS_TYPE(AppUpdate)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
-	class AppRenderEvent : public KDEvent
+	class AppRenderEvent : public Event
 	{
 	public:
 		AppRenderEvent() {}

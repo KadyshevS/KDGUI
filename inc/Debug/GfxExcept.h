@@ -31,7 +31,7 @@ class GfxHrException : public GfxException
         {
             return "KDGraphics Exception";
         }
-        virtual const char* what() const override
+        virtual const char* what() const noexcept override
         {
             std::stringstream ss;
             ss  << type() << "\n\n"
@@ -85,7 +85,7 @@ class GfxInfoException : public GfxException
         {
             return "KDGraphics Info Exception";
         }
-        virtual const char* what() const override
+        virtual const char* what() const noexcept override
         {
             std::stringstream ss;
             ss  << type() << "\n\n"

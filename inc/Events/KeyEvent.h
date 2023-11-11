@@ -1,12 +1,12 @@
 #pragma once
 
-#include "KDEvent.h"
+#include "Event.h"
 
 #include <sstream>
 
 namespace KDE 
 {
-	class KeyEvent : public KDEvent
+	class KeyEvent : public Event
 	{
 	public:
 		int GetKeyCode() const { return m_KeyCode; }

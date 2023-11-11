@@ -1,13 +1,13 @@
 #pragma once
 
 #include <Codes/MouseCodes.h>
-#include "KDEvent.h"
+#include "Event.h"
 
 #include <sstream>
 
 namespace KDE 
 {
-	class MouseMovedEvent : public KDEvent
+	class MouseMovedEvent : public Event
 	{
 	public:
 		MouseMovedEvent(float x, float y)
@@ -29,7 +29,7 @@ namespace KDE
 		float m_MouseX, m_MouseY;
 	};
 
-	class MouseRawEvent : public KDEvent
+	class MouseRawEvent : public Event
 	{
 	public:
 		MouseRawEvent(int xDelta, int yDelta)
@@ -51,7 +51,7 @@ namespace KDE
 		int m_DeltaX, m_DeltaY;
 	};
 
-	class MouseLeaveEvent : public KDEvent
+	class MouseLeaveEvent : public Event
 	{
 		public:
 			MouseLeaveEvent() {}
@@ -65,7 +65,7 @@ namespace KDE
 			EVENT_CLASS_CATEGORY(EventCategoryMouse)
 	};
 
-	class MouseEnterEvent : public KDEvent
+	class MouseEnterEvent : public Event
 	{
 		public:
 			MouseEnterEvent() {}
@@ -79,7 +79,7 @@ namespace KDE
 			EVENT_CLASS_CATEGORY(EventCategoryMouse)
 	};
 
-	class MouseScrolledEvent : public KDEvent
+	class MouseScrolledEvent : public Event
 	{
 	public:
 		MouseScrolledEvent(int xDelta, int yDelta)
@@ -101,7 +101,7 @@ namespace KDE
 		int m_DeltaX, m_DeltaY;
 	};
 
-	class MouseButtonEvent : public KDEvent
+	class MouseButtonEvent : public Event
 	{
 	public:
 		int GetMouseButton() const { return m_Button; }
